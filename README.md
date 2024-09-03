@@ -8,3 +8,9 @@ Directories ignored by git in workspace:
 - Build
 - test*
 - src/*
+
+## Quick start guide
+1. Prepare essential environment of building edk2 (Python3 and VS2019)
+1. Put edk2 and others package in src dir.
+1. Launch a cmd on workspace, or right ckick OpenCmdHere.bat.
+1. Excute build_xxx.bat to start platform compiling.
