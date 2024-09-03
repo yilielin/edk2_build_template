@@ -1,2 +1,2 @@
 
-if exist "Build" ( rmdir /Q /S Build )
+@if exist "Build" ( rmdir /Q /S Build )
