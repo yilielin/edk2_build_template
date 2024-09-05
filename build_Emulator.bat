@@ -15,7 +15,7 @@ call "src\edk2\edksetup.bat"
 
 call build -a %TARGET_ARCH% -t %TOOL_CHAIN_TAG% -b %TARGET% -p %ACTIVE_PLATFORM%
 
-if "%AUTO_RUN_WINHOST%"=="1" goto :WIN_HOST
+if "%AUTO_RUN_WINHOST%"=="1" call :WIN_HOST
 :PROG_END
 goto :EOF
 
@@ -27,4 +27,4 @@ if exist "%PATH_WINHOST%\WinHost.exe" (
     cmd /c WinHost.exe
     popd
 )
-goto :PROG_END
+exit /b 0
