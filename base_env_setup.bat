@@ -10,10 +10,8 @@ set "WORKSPACE=%WORKSPACE:~0,-1%"
 
 :: Setup NASM and IASL
 set "NASM_PREFIX=%WORKSPACE%\tools\nasm-2.16.03\"
-:: Add iasl PATH if it's not in PATH variable
-if "%PATH:iasl-win-=%"=="%PATH%" (
-    set "PATH=%PATH%;%WORKSPACE%\tools\iasl-win-20240827"
-)
+set "IASL_PREFIX=%WORKSPACE%\tools\iasl-win-20240827\"
+
 
 exit /b 0
 

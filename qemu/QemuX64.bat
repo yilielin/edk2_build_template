@@ -2,28 +2,37 @@
 chcp 65001 > NUL
 cd  %~d0%~p0 && %~d0
 
-REM Need run with administer privilege
-REM QemuX64.bat
-REM 1.unmount vhdx
-REM 2.Launch qemu
-REM 3.mount vhdx when qemu is terminated
+REM Run QEMU with disk as directory
+REM 1.set QEMU_MOUNT=DIR
+REM 2.Run QemuX64.bat 
+
+REM Run QEMU with disk as VHDX
+REM 1.set QEMU_MOUNT=VHDX
+REM 2.Run QemuX64.bat with administer privilege
 
 REM QemuX64.bat m
-REM mount vhdx
+REM 1.mount vhdx
 
 REM QemuX64.bat u
-REM unmount vhdx
-
+REM 1.unmount vhdx
 
 :: CONFIG
-set "VHDX_IMG=%CD%\disk0.vhdx"
 set "QEMU_OVMF=%CD%\OVMF.fd"
 set "QEMU_X64=qemu-system-x86_64.exe"
+:: set mount option: VHDX or DIR
+set "QEMU_MOUNT=DIR"
+:: mounted VHDX
+set "VHDX_IMG=%CD%\disk0.vhdx"
+:: mounted DIR
+set "DISK_DIR=%CD%\disk0"
+
+
 
 :: CHECK qemu and files
 %QEMU_X64% --help > NUL || ( echo " Can not invoke qemu-system-x86_64.exe " && goto :PROG_ERROR )
 if not exist %QEMU_OVMF% ( echo " OVMF is not found, exit. " && goto :PROG_ERROR )
-if not exist %VHDX_IMG% ( echo " VHDX is not found, exit. " && goto :PROG_ERROR ) 
+if not exist %VHDX_IMG% ( echo " VHDX is not found. " ) 
+if not exist %DISK_DIR% ( echo " DISK DIR is not found. " ) 
 
 :: start
 
@@ -36,16 +45,22 @@ if /I "%1"=="M" (
 )
 
 
-
-call :UNMOUNT_VHDX
-echo Run QEMU with OVMF
+echo Starting to run QEMU with OVMF
 echo.
 set "QEMU_EMULATOR= qemu-system-x86_64.exe -device usb-ehci -device usb-tablet -vga std "
 set "QEMU_MACHINE= -machine q35 "
 set "QEMU_SMP= -smp 2 "
-set "QEMU_MEM= -m 1024M "
+set "QEMU_MEM= -m 512M "
 set "QEMU_BIOS= -bios %QEMU_OVMF%"
-set "QEMU_DISK0= -drive format=vhdx,file=%VHDX_IMG%"
+
+if "%QEMU_MOUNT%"=="VHDX" (
+  set "QEMU_DISK0= -drive format=vhdx,file=%VHDX_IMG% "
+  :: Test and unmount VHDX before QEMU starting up
+  call :UNMOUNT_VHDX
+)
+if "%QEMU_MOUNT%"=="DIR" (
+  set "QEMU_DISK0= -drive file=fat:rw:%DISK_DIR%,format=raw,media=disk "
+)
 
 :: QEMU without network
 set "QEMU_NET= -net none"
@@ -64,10 +79,12 @@ echo %QEMU_MEM%
 set "QEMU_UEFI_CMD=%QEMU_EMULATOR% %QEMU_MACHINE% %QEMU_SMP% %QEMU_MEM% %QEMU_NET% %QEMU_DISK0% %QEMU_BIOS%"
 echo Run %QEMU_UEFI_CMD%
 %QEMU_UEFI_CMD%
-call :MOUNT_VHDX
+
+:: Uncomment the line as below to mount disk when QEMU is terminated
+REM call :MOUNT_VHDX
+
 :END
 goto :EOF
-
 
 :: Error handle
 :PROG_ERROR
@@ -82,7 +99,7 @@ if /I "%isMount%"=="False" (
     echo Mount %VHDX_IMG%
     powershell -command "Mount-DiskImage -ImagePath "%VHDX_IMG%""  > NUL
 )
-if exist testMount.txt (del /Q testMount.txt)
+if exist testMount.txt ( del /Q testMount.txt )
 exit /b 0
 
 :UNMOUNT_VHDX
@@ -92,5 +109,5 @@ if /I "%isMount%"=="True" (
     echo Unmount %VHDX_IMG%
     powershell -command "Dismount-DiskImage -ImagePath "%VHDX_IMG%"" > NUL
 )
-if exist testMount.txt (del /Q testMount.txt)
+if exist testMount.txt ( del /Q testMount.txt )
 exit /b 0
