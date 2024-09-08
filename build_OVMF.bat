@@ -1,4 +1,5 @@
 @echo off
+cd  %~d0%~p0 && %~d0
 call base_env_setup.bat
 :: Project settings
 set "EDK_TOOLS_PATH=%WORKSPACE%\src\edk2\BaseTools"
