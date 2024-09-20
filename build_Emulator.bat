@@ -9,14 +9,14 @@ set "TARGET=RELEASE"
 set "TARGET_ARCH=X64"
 set "TOOL_CHAIN_TAG=VS2022"
 
-:: auto run winhost, set to 1 to enable
-set "AUTO_RUN_WINHOST="
+:: Run winhost once compile finished, set to 1 to enable
+set "RUN_WINHOST="
 
 call "src\edk2\edksetup.bat"
 
 call build -a %TARGET_ARCH% -t %TOOL_CHAIN_TAG% -b %TARGET% -p %ACTIVE_PLATFORM%
 
-if "%AUTO_RUN_WINHOST%"=="1" call :WIN_HOST
+if "%RUN_WINHOST%"=="1" call :WIN_HOST
 :PROG_END
 goto :EOF
 

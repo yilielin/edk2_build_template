@@ -18,7 +18,7 @@ set "QEMU_DISK0_PATH=%SELF_PATH%\disk0"
 
 
 :: ==== CHECK qemu and files ====
-%QEMU_EMULATOR% --help > NUL || ( echo " Can not invoke qemu-system-x86_64.exe " && goto :PROG_ERROR )
+%QEMU_EMULATOR% --help > NUL || ( echo " %QEMU_EMULATOR% " && goto :PROG_ERROR )
 if not exist %QEMU_OVMF_PATH% ( echo " OVMF is not found, exit. " && goto :PROG_ERROR )
 if not exist %QEMU_VHDX_PATH% ( echo " VHDX is not found. " ) 
 if not exist %QEMU_DISK0_PATH% ( echo " DISK DIR is not found. " ) 
