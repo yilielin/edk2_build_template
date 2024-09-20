@@ -24,8 +24,6 @@ goto :EOF
 :: Launch WinHost if it exist
 set "PATH_WINHOST=%WORKSPACE%\Build\Emulator%TARGET_ARCH%\%TARGET%_%TOOL_CHAIN_TAG%\%TARGET_ARCH%"
 if exist "%PATH_WINHOST%\WinHost.exe" (
-    pushd %PATH_WINHOST%
-    cmd /c WinHost.exe
-    popd
+    start /d "%PATH_WINHOST%" WinHost.exe
 )
 exit /b 0
