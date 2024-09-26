@@ -7,7 +7,7 @@ Provide scripts and tools for EDK2 on Windows
 Directories are ignored by git in workspace: 
 - Output dirs: Build
 - Items with test prefix: test*
-- Source code: src/*
+- Source code: src\*
 
 ## Quick start guide
 1. Prepare essential environment of edk2 (Python3 and VS2022)
@@ -18,6 +18,6 @@ Directories are ignored by git in workspace:
 
 ## Note
 Make sure BaseTools in edk2 is usable, you can rebuild BaseTools:
-1. cd edk2/BaseTools/
+1. cd edk2\BaseTools\
 1. nmake cleanall
 1. nmake
