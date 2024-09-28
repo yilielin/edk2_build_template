@@ -1,5 +1,11 @@
+# Editor's configuration related
 /.edkCode/
+settings.json
+
+# EDK2 related
 /Build/
 /Conf/
+
+# For test
 /test*/
 test*
